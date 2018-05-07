@@ -6,7 +6,7 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const cookieSession = require("cookie-session");
 const bodyParser = require("body-parser");
-const crypto = require("crypto");
+//const crypto = require("crypto");
 const cookieParser = require("cookie-parser");
 const axios = require("axios");
 
@@ -50,11 +50,50 @@ app.get("/", (req, res, next) => {
   res.render("index.html", {user: req.user});
 });
 
+//route for homepage post requests
+/*
+Handles business "going" logic
+-Find logged in user
+-if user is already going to specified business
+  -remove business from user
+  -update business "going" counter
+    -if business not found create new one
+-if user is NOT already going to specified business
+  -increment business counter by 1
+  -add business to user
+  
+*/
+app.post("/", urlencodedParser, (req, res) => {
+  if(!req.user) res.status(401).send("Not logged in");
+  else {
+    let increment = 0;
+    User.findById(req.user.id).then((user) => {      
+      if(user.going_to.includes(req.body.id)) {   
+        increment = -1;
+        User.updateOne({_id: req.user.id}, {$pull: {going_to: req.body.id}}).exec();        
+      }
+      else {        
+        increment = 1;             
+        User.updateOne({_id: req.user.id}, {$push: {going_to: req.body.id}}).exec();        
+      }
+      
+      Business.findOneAndUpdate({business_id: req.body.id}, {$inc: {going: increment}}, {new: true}).then((business) => {        
+          if(business) res.send(business.going.toString());
+          else {
+            new Business({business_id: req.body.id, going: 1}).save()
+              .then((business) => res.send(business.going.toString()));
+          }
+        });
+    });        
+  }
+});
+
 
 //route for homepage post requests
-app.post("/", urlencodedParser, (req, res, next) => {
-  let param = req.body.searchField;      
-  let results = [];      
+app.get("/search", (req, res, next) => {
+  let param = req.query.searchField;
+  let results = [];     
+  let ids = [];
   
   axios({    
     url: "https://api.yelp.com/v3/businesses/search",
@@ -65,14 +104,26 @@ app.post("/", urlencodedParser, (req, res, next) => {
       let image_url = item.image_url;
       let name = item.name;
       let url = item.url;
-      let id = item.id;    
+      let id = item.id;   
+      ids.push(id);
       let price = item.price;
       let rating = item.rating;
       let review_count = item.review_count;
       let business = {id: id, name: name, image_url: image_url, url: url, price: price, rating: rating, review_count: review_count};
       results.push(business);               
-    }        
-    res.render("index.html", {results: results, user: req.user});
+    }    
+    
+    Business.find({business_id: {$in: ids}}).then((businesses) => {
+      for(let b of businesses) {
+        if(!b) continue;        
+        let result = results.find((e) => {return e.id === b.business_id;});
+        if(result) result.going = b.going;
+      }
+      
+      res.cookie('s', param, { expires: new Date(Date.now() + 86400000), httpOnly: true , secure: true});
+      res.render("index.html", {results: results, user: req.user});
+    });    
+    
   }).catch((e) => next(e));
   
 });

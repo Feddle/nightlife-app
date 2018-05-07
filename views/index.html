@@ -20,7 +20,7 @@
     <!--CONTENT-->
     <main class="container bg-dark" id="mainContainer">      
       <h2 class="text-white text-center">Nightlife coordination app</h2>
-      <div class="text-center">
+      <div id="div_top" class="text-center">
         <p class="text-white">Search for bars and restaurants near you
           <!--<i class="material-icons text-white">search</i>-->
           <i class="material-icons text-white">restaurant</i>
@@ -38,20 +38,11 @@
         </p>
         <p class="text-white">Have fun!
           <i class="material-icons text-white">mood</i>
-        </p>
-      </div>      
-      <form method="post" class="mb-2">
-        <div class="row">
-          <div class="col-8">
-            <input id="searchField" type="text" class="form-control" placeholder="Enter location to search" name="searchField">   
-            <small class="form-text text-muted">Search powered by Yelp</small>
-          </div>          
-          <div class="col-4 ml-0 pl-0">
-            <input id="button_search" class="btn btn-outline-light" type="submit" value="Search">
-            {% if not user %}
+        </p>      
+        {% if not user %}
             <a id="button_login" href="/auth/twitter" class="btn btn-outline-light">Log in</a>
             {% else %}
-            <div class="dropdown">
+            <div id="user_dropdown" class="dropdown">
               <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 {{ user.username }}
               </button>
@@ -60,6 +51,15 @@
               </div>
             </div>
             {% endif %}
+      </div>
+      <form method="get" class="mb-2" action="/search">
+        <div class="row">
+          <div class="col-8">
+            <input id="searchField" type="text" class="form-control" placeholder="Enter location to search" name="searchField" required>   
+            <small class="form-text text-muted">Search powered by Yelp</small>
+          </div>          
+          <div class="col-4 ml-0 pl-0">
+            <input id="button_search" class="btn btn-outline-light" type="submit" value="Search">            
           </div>
         </div>        
       </form>       
@@ -72,8 +72,8 @@
       <div class="row">
         {% endif %}
         <div class="col-12 col-md-6 col-xl-3 mb-2">                  
-          <div class="card" data-id="{{ business.id }}">
-            <div id="card_img_container" class="container">
+          <div class="card">
+            <div class="container card_img_container">
               {% if business.image_url %}
               <a href="{{ business.url }}">              
                 <img class="card-img-top" src="{{ business.image_url }}" alt="Business thumbnail">
@@ -85,25 +85,25 @@
             </div>
             <div class="card-body">
               <h4 class="card-title">{{ business.name }}</h4>
-              <span id="card_review" class="card-text">
+              <span class="card-text card_review">
                 {% set rating = business.rating | round(0, "floor") %}
                 {% set ratingLength = business.rating | string | length %}
                 <span>
                 {% for i in range(rating) %}<i class="material-icons">star</i> {% endfor %}
                 {% if ratingLength > 1 %}<i class="material-icons">star_half</i>{% endif %}
                 </span>
-                <i id="card_review_count" class="font-weight-light">({{ business.review_count }})</i>
+                <i class="font-weight-light card_review_count">({{ business.review_count }})</i>
               </span>  
               <span class="card-text">
                 {% set priceLength = business.price | length %}
                 {% for i in range(priceLength) %}<i class="material-icons">euro_symbol</i>{% endfor %}
               </span>
             </div>
-            <div id="card_buttons" class="container">
-              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalCenter">
-                Going {{ business.going if business.going > 0 else "0" }}
+            <div class="container card_buttons">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalCenter" data-id="{{ business.id }}">
+                Going {{ business.going if business.going else "0" }}
               </button>
-              <a href="{{ business.url }}" id="card_button_more" class="btn btn-secondary">More</a>
+              <a href="{{ business.url }}" class="btn btn-secondary card_button_more">More</a>
             </div>
           </div>
         </div>
@@ -139,15 +139,11 @@
 </div>
 {% endif %}
     
-
     
     <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="/client.js"></script>
     
-    {% block scripts %}
-    
-    {% endblock %}
   </body>
 </html>
-"

@@ -43,30 +43,30 @@ img {
 }
 
 
-#card_review_count {
+.card_review_count {
  text-align: center; 
 }
 
-#card_review {
+.card_review {
   display: flex;
   align-items: center;
 }
 
-#card_buttons {
+.card_buttons {
   display: flex; 
   margin-bottom: 0.2rem;
 }
 
-#card_buttons a {
+.card_buttons a {
   align-self: flex-end;
   margin-left: auto;
 }
 
-#card_img_container {
+.card_img_container {
   display: flex; 
 }
 
-#card_img_container a{
+.card_img_container a{
   width: 100%;
 }
 
@@ -74,15 +74,19 @@ img {
   font-size: 13px;
 }
 
-#button_login {  
-  width: var(--small-screen-button);
+
+#div_top {  
+  margin-bottom: 2rem;
 }
 
-#button_search {  
-  width: var(--small-screen-button);
+#user_dropdown {
+  margin-top: 2rem;
 }
 
-
+#button_search {
+  display: inline-block; 
+  width: 100%;
+}
 
 @media (min-width: 576px) {  
   #searchField {
@@ -96,16 +100,6 @@ img {
     padding: 4rem;
   }
   
-  
-  #button_search {
-    display: inline-block; 
-    width: auto;
-  }
-  
-  #button_login {
-    display: inline-block;
-    width: auto;    
-  }
     
 }
 

@@ -1,5 +1,14 @@
-// client-side js
-// run by the browser each time your view template is loaded
 
-// by default, you've got jQuery,
-// add other scripts at the bottom of index.html
+
+$(document).ready(() => {
+  $(".card_buttons button").on("click", function() {
+    let id = $(this).data("id");    
+    $.ajax({
+      url: "https://nightlife-app-feddle.glitch.me/",
+      method: "POST",
+      data: {id: id},            
+      success: (d) => $(this).text("Going " + d)
+    });
+  });
+});
+

@@ -18,12 +18,12 @@ passport.use(
         consumerSecret: process.env.TWITTER_CONSUMER_SECRET,
         callbackURL: "/auth/twitter/redirect"
     }, (token, tokenSecret, profile, done) => {           
-        User.findOne({twitterId: profile.id}).then((currentUser) => {
+        User.findOne({twitter_id: profile.id}).then((currentUser) => {
             if(currentUser){                
                 done(null, currentUser);
             } else {                
                 new User({
-                    twitterId: profile.id,
+                    twitter_id: profile.id,
                     username: profile.username                    
                 }).save().then((newUser) => {                    
                     done(null, newUser);
