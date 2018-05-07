@@ -1,0 +1,121 @@
+/* styles */
+/* called by your view template */
+
+/* You might want to try something fancier: */
+/* less: http://lesscss.org/ */
+:root {
+  --small-screen-button: 86px;
+}
+
+html {
+  height: 100%;
+}
+
+body {
+  min-height: 100%;   
+  position: relative;
+  padding-bottom: 70px;
+}
+
+
+footer {
+  position: absolute;
+  bottom: 0;
+  height: 50px;
+}
+
+img {
+  max-height: 220px;
+}
+
+.card {
+ height: 100%; 
+}
+
+.noimg_a {  
+  width: 100%;
+  text-align: center;
+}
+
+.noimg_i {
+  font-size: 100px !important;
+  color: grey;
+}
+
+
+#card_review_count {
+ text-align: center; 
+}
+
+#card_review {
+  display: flex;
+  align-items: center;
+}
+
+#card_buttons {
+  display: flex; 
+  margin-bottom: 0.2rem;
+}
+
+#card_buttons a {
+  align-self: flex-end;
+  margin-left: auto;
+}
+
+#card_img_container {
+  display: flex; 
+}
+
+#card_img_container a{
+  width: 100%;
+}
+
+#searchField {
+  font-size: 13px;
+}
+
+#button_login {  
+  width: var(--small-screen-button);
+}
+
+#button_search {  
+  width: var(--small-screen-button);
+}
+
+
+
+@media (min-width: 576px) {  
+  #searchField {
+    font-size: 16px;
+  }
+
+}
+
+@media (min-width: 768px) {
+  .noimg_a {
+    padding: 4rem;
+  }
+  
+  
+  #button_search {
+    display: inline-block; 
+    width: auto;
+  }
+  
+  #button_login {
+    display: inline-block;
+    width: auto;    
+  }
+    
+}
+
+@media (min-width: 992px) {
+  
+  .noimg_a {
+    padding: 2.75rem;
+  }  
+  
+    
+}
+
+
