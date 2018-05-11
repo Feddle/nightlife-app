@@ -1,0 +1,149 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Nightlife App</title>
+    <meta name="Nightlife App" content="Nightlife App made by Feddle">
+    <link id="favicon" rel="icon" href="https://glitch.com/edit/favicon-app.ico" type="image/x-icon">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+  </head>
+  <body class="bg-dark">
+    <div id="content">  
+                
+    <!--CONTENT-->
+    <main class="container bg-dark" id="mainContainer">      
+      <h2 class="text-white text-center">Nightlife coordination app</h2>
+      <div id="div_top" class="text-center">
+        <p class="text-white">Search for bars and restaurants near you
+          <!--<i class="material-icons text-white">search</i>-->
+          <i class="material-icons text-white">restaurant</i>
+        </p>
+        <!--<p class="text-white">See a quick review about the place
+          <i class="material-icons text-white">rate_review</i>
+          <i class="material-icons text-white">thumb_up</i>
+        </p>-->
+        <p class="text-white">Click for more information
+          <!--<i class="material-icons text-white">touch_app</i>-->
+          <i class="material-icons text-white">format_align_left</i>
+        </p>
+        <p class="text-white">Click "going"
+          <i class="material-icons text-white">person_pin</i>
+        </p>
+        <p class="text-white">Have fun!
+          <i class="material-icons text-white">mood</i>
+        </p>      
+        {% if not user %}
+            <a id="button_login" href="/auth/twitter" class="btn btn-outline-light">Log in</a>
+            {% else %}
+            <div id="user_dropdown" class="dropdown">
+              <button class="btn btn-outline-light dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{ user.username }}
+              </button>
+              <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                <a class="dropdown-item" href="/auth/logout">Log out</a>                
+              </div>
+            </div>
+            {% endif %}
+      </div>
+      <form method="get" class="mb-2" action="/search">
+        <div id="search_row" class="row">
+          <div class="col-8">
+            <input id="searchField" type="text" class="form-control" placeholder="Enter location to search" name="searchField" required>   
+            <small class="form-text text-muted">Search powered by Yelp</small>
+          </div>          
+          <div id="div_search" class="col-4 ml-0 pl-0">
+            <input id="button_search" class="btn btn-outline-light" type="submit" value="Search">            
+          </div>
+        </div>        
+      </form>       
+      <div id="search_results" class="container-fluid">
+      {% for business in results %}
+      {% if loop.index0 % 4 === 0 and loop.index0 != 0%}
+      </div>
+      {% endif %}
+      {% if loop.index0 % 4 === 0 or loop.index === 1 %}
+      <div class="row">
+        {% endif %}
+        <div class="col-12 col-md-6 col-xl-3 mb-2">                  
+          <div class="card">
+            <div class="container card_img_container">
+              {% if business.image_url %}
+              <a href="{{ business.url }}">              
+                <img class="card-img-top" src="{{ business.image_url }}" alt="Business thumbnail">
+              {% else %}
+              <a href="{{ business.url }}" class="noimg_a">  
+                <i class="material-icons noimg_i">camera_alt</i>
+              {% endif %}
+              </a>
+            </div>
+            <div class="card-body">
+              <h4 class="card-title">{{ business.name }}</h4>
+              <span class="card-text card_review">
+                {% set rating = business.rating | round(0, "floor") %}
+                {% set ratingLength = business.rating | string | length %}
+                <span>
+                {% for i in range(rating) %}<i class="material-icons">star</i> {% endfor %}
+                {% if ratingLength > 1 %}<i class="material-icons">star_half</i>{% endif %}
+                </span>
+                <i class="font-weight-light card_review_count">({{ business.review_count }})</i>
+              </span>  
+              <span class="card-text">
+                {% set priceLength = business.price | length %}
+                {% for i in range(priceLength) %}<i class="material-icons">euro_symbol</i>{% endfor %}
+              </span>
+            </div>
+            <div class="container card_buttons">
+              <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#modalCenter" data-id="{{ business.id }}">
+                Going {{ business.going if business.going else "0" }}
+              </button>
+              <a href="{{ business.url }}" class="btn btn-secondary card_button_more">More</a>
+            </div>
+          </div>
+        </div>
+      {% if loop.last %}
+      </div>
+      {% endif %}
+      {% endfor %}  
+      </div>
+    </main>
+    <!--FOOTER-->
+    
+  </div>
+  <footer class="footer">
+    <div class="container-fluid ml-0 mb-0">
+      <p class="text-white mb-auto">Made by Feddle</p>
+      <a href="https://github.com/Feddle" class="text-white">https://github.com/Feddle</a>
+    </div>        
+  </footer>
+    
+{% if not user %}
+<!--MODAL-->
+<div class="modal fade" id="modalCenter" tabindex="-1" role="dialog">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">      
+      <div class="modal-body">
+        Please log in first!
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>        
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+    
+    
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="/client.js"></script>
+    
+  </body>
+</html>
