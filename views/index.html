@@ -53,17 +53,17 @@
             {% endif %}
       </div>
       <form method="get" class="mb-2" action="/search">
-        <div class="row">
+        <div id="search_row" class="row">
           <div class="col-8">
             <input id="searchField" type="text" class="form-control" placeholder="Enter location to search" name="searchField" required>   
             <small class="form-text text-muted">Search powered by Yelp</small>
           </div>          
-          <div class="col-4 ml-0 pl-0">
+          <div id="div_search" class="col-4 ml-0 pl-0">
             <input id="button_search" class="btn btn-outline-light" type="submit" value="Search">            
           </div>
         </div>        
       </form>       
-      <div id="search_results" class="container">
+      <div id="search_results" class="container-fluid">
       {% for business in results %}
       {% if loop.index0 % 4 === 0 and loop.index0 != 0%}
       </div>

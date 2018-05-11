@@ -70,6 +70,15 @@ img {
   width: 100%;
 }
 
+.col-8 {
+ padding: 0 !important; 
+}
+
+#search_row {
+  max-width: 100%; 
+  margin: 0;
+}
+
 #searchField {
   font-size: 13px;
 }
@@ -86,6 +95,19 @@ img {
 #button_search {
   display: inline-block; 
   width: 100%;
+  font-size: 13px;
+}
+
+#mainContainer {  
+  padding: 0;
+}
+
+#search_results div div {
+ padding: 0; 
+}
+
+#div_search {
+ padding-right: 0; 
 }
 
 @media (min-width: 576px) {  
@@ -100,6 +122,30 @@ img {
     padding: 4rem;
   }
   
+  #search_results div div {
+   padding: 0 15px 0 15px; 
+  }
+  
+  #button_search {    
+    font-size: 16px;
+  }
+
+  #div_search {
+   padding-right: 15px; 
+  }
+  
+  #search_row {
+    max-width: none; 
+    margin: 0 -15px 0 -15px;
+  }
+  
+  #mainContainer {    
+    padding: 0 15px 0 15px;
+  }
+  
+  .col-8 {
+   padding: 0 15px 0 15px !important; 
+  }
     
 }
 
